@@ -2,7 +2,7 @@ import base64
 import io
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import wraps
 
 import pyotp
@@ -37,6 +37,7 @@ ALLOWED_EXT = {"docx"}
 
 app = Flask(__name__)
 app.secret_key = "essic-doc-numbering-secret-2026"
+app.permanent_session_lifetime = timedelta(days=30)
 supabase_url = os.environ.get("SUPABASE_DB_URL")
 if not supabase_url:
     raise RuntimeError("SUPABASE_DB_URL environment variable is required and not set.")
@@ -185,6 +186,7 @@ def setup():
 
             session.pop('pending_email', None)
             session['user'] = {'name': user.name, 'email': user.email}
+            session.permanent = True
             return redirect(url_for('index'))
         else:
             flash("Invalid code. Please try again.", "danger")
@@ -224,6 +226,7 @@ def verify():
         if totp.verify(code):
             session.pop('pending_email', None)
             session['user'] = {'name': user.name, 'email': user.email}
+            session.permanent = True
             return redirect(url_for('index'))
         else:
             flash("Invalid authenticator code. Please try again.", "danger")
@@ -1455,5 +1458,10 @@ def delete_contact(contact_id):
     db.session.commit()
     flash("Contact deleted successfully.", "success")
     return redirect(url_for('contacts'))
+@app.route("/uploads/<path:filename>")
+@login_required
+def serve_upload(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
+
 if __name__ == "__main__":
     app.run(debug=true, host="0.0.0.0", port=5010)

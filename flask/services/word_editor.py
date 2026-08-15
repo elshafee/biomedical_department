@@ -153,140 +153,252 @@ def replace_placeholders(input_path: str, output_path: str, replacements: dict, 
                 paragraph._element.getparent().remove(paragraph._element)
             elif paragraph.runs:
                 if modified_body:
-                    lines = full_text.split('\n')
+                    from html.parser import HTMLParser
+                    import re
+                    
+                    class DocxHTMLParser(HTMLParser):
+                        def __init__(self):
+                            super().__init__()
+                            self.paragraphs = []
+                            self.current_paragraph = []
+                            self.current_format = {'bold': False, 'italic': False, 'underline': False}
+                            
+                        def handle_starttag(self, tag, attrs):
+                            if tag in ['strong', 'b']:
+                                self.current_format['bold'] = True
+                            elif tag in ['em', 'i']:
+                                self.current_format['italic'] = True
+                            elif tag in ['u']:
+                                self.current_format['underline'] = True
+                            elif tag in ['p', 'li', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+                                if self.current_paragraph:
+                                    self.paragraphs.append(self.current_paragraph)
+                                    self.current_paragraph = []
+                                if tag == 'li':
+                                    self.current_paragraph.append({
+                                        'text': '• ',
+                                        'bold': False,
+                                        'italic': False,
+                                        'underline': False
+                                    })
+                                
+                        def handle_endtag(self, tag):
+                            if tag in ['strong', 'b']:
+                                self.current_format['bold'] = False
+                            elif tag in ['em', 'i']:
+                                self.current_format['italic'] = False
+                            elif tag in ['u']:
+                                self.current_format['underline'] = False
+                            elif tag in ['p', 'li', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+                                if self.current_paragraph:
+                                    self.paragraphs.append(self.current_paragraph)
+                                    self.current_paragraph = []
+                            elif tag == 'br':
+                                if self.current_paragraph:
+                                    self.paragraphs.append(self.current_paragraph)
+                                    self.current_paragraph = []
+
+                        def handle_data(self, data):
+                            text = data.replace('\n', ' ').replace('\r', '')
+                            if not text.strip() and len(self.current_paragraph) == 0:
+                                return
+                            self.current_paragraph.append({
+                                'text': text,
+                                'bold': self.current_format['bold'],
+                                'italic': self.current_format['italic'],
+                                'underline': self.current_format['underline']
+                            })
+
+                    if '<p' not in full_text and '<br' not in full_text and '<div' not in full_text:
+                        full_text = full_text.replace('\n', '<br>')
+                        
+                    parser = DocxHTMLParser()
+                    parser.feed(full_text)
+                    if parser.current_paragraph:
+                        parser.paragraphs.append(parser.current_paragraph)
+                    
+                    parsed_paragraphs = parser.paragraphs
                     
                     # Clear original paragraph text completely
                     for run in paragraph.runs:
                         run.text = ""
-                    
+                        
+                    # Save base run properties from the very first run, if any
+                    base_rPr = None
+                    if paragraph.runs and paragraph.runs[0]._element.rPr is not None:
+                        base_rPr = copy.deepcopy(paragraph.runs[0]._element.rPr)
+                        
                     current_p = paragraph
                     
-                    for line in lines:
-                        if not line.strip():
-                            continue
-                            
-                        # If current_p already has text, we need a new paragraph for this new line
+                    for p_data in parsed_paragraphs:
                         if current_p.runs and any(r.text for r in current_p.runs):
                             new_p_element = OxmlElement('w:p')
                             current_p._element.addnext(new_p_element)
                             current_p = Paragraph(new_p_element, current_p._parent)
                             
-                        import re
-                        pieces = re.split(r"(\{\{TABLE_\d+\}\}|\{\{IMAGE_\d+\}\})", line)
+                        current_p.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
+                        fmt = current_p.paragraph_format
+                        fmt.space_before = Pt(0)
+                        fmt.space_after = Pt(0)
+                        fmt.line_spacing = 1.0
+
+                        pPr = current_p._element.get_or_add_pPr()
+                        bidi = OxmlElement('w:bidi')
+                        bidi.set(qn('w:val'), '1')
+                        pPr.append(bidi)
                         
-                        for part in pieces:
-                            if not part:
-                                continue
-                                
-                            table_match = re.fullmatch(r"\{\{TABLE_(\d+)\}\}", part)
-                            if table_match:
-                                if tables_data:
-                                    try:
-                                        idx = int(table_match.group(1)) - 1
-                                        if 0 <= idx < len(tables_data):
-                                            t_data = tables_data[idx]
-                                            if t_data:
-                                                from docx.enum.table import WD_TABLE_ALIGNMENT
-                                                new_table = doc.add_table(rows=len(t_data), cols=len(t_data[0]))
-                                                
-                                                try:
-                                                    new_table.style = 'Table Grid'
-                                                except:
-                                                    pass
-
-                                                new_table.alignment = WD_TABLE_ALIGNMENT.CENTER
-                                                tblPr = new_table._element.xpath('w:tblPr')
-                                                if tblPr:
-                                                    bidiVisual = OxmlElement('w:bidiVisual')
-                                                    tblPr[0].append(bidiVisual)
+                        for run_info in p_data:
+                            text_part = run_info['text']
+                            pieces = re.split(r"(\{\{TABLE_\d+\}\}|\{\{IMAGE_\d+\}\})", text_part)
+                            
+                            for part in pieces:
+                                if not part:
+                                    continue
+                                    
+                                table_match = re.fullmatch(r"\{\{TABLE_(\d+)\}\}", part)
+                                if table_match:
+                                    if tables_data:
+                                        try:
+                                            idx = int(table_match.group(1)) - 1
+                                            if 0 <= idx < len(tables_data):
+                                                t_data = tables_data[idx]
+                                                if t_data:
+                                                    from docx.enum.table import WD_TABLE_ALIGNMENT
+                                                    new_table = doc.add_table(rows=len(t_data), cols=len(t_data[0]))
                                                     
-                                                    # Manually add borders with brand color
-                                                    tblBorders = OxmlElement('w:tblBorders')
-                                                    for border_name in ['top', 'left', 'bottom', 'right', 'insideH', 'insideV']:
-                                                        border = OxmlElement(f'w:{border_name}')
-                                                        border.set(qn('w:val'), 'single')
-                                                        border.set(qn('w:sz'), '4')
-                                                        border.set(qn('w:space'), '0')
-                                                        border.set(qn('w:color'), '343176')
-                                                        tblBorders.append(border)
-                                                    tblPr[0].append(tblBorders)
+                                                    new_table.autofit = True
+                                                    
+                                                    try:
+                                                        new_table.style = 'Table Grid'
+                                                    except:
+                                                        pass
 
-                                                for r_idx, row_data in enumerate(t_data):
-                                                    for c_idx, cell_value in enumerate(row_data):
-                                                        cell = new_table.cell(r_idx, c_idx)
-                                                        cell.text = ""
-                                                        p = cell.paragraphs[0]
-                                                        p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
-                                                        pPr = p._element.get_or_add_pPr()
-                                                        bidi = OxmlElement('w:bidi')
-                                                        bidi.set(qn('w:val'), '1')
-                                                        pPr.append(bidi)
+                                                    new_table.alignment = WD_TABLE_ALIGNMENT.CENTER
+                                                    tblPr = new_table._element.xpath('w:tblPr')
+                                                    if tblPr:
+                                                        tblW = OxmlElement('w:tblW')
+                                                        tblW.set(qn('w:w'), '5000')
+                                                        tblW.set(qn('w:type'), 'pct')
+                                                        tblPr[0].append(tblW)
                                                         
-                                                        run = p.add_run(str(cell_value))
+                                                        bidiVisual = OxmlElement('w:bidiVisual')
+                                                        tblPr[0].append(bidiVisual)
                                                         
-                                                        tcPr = cell._element.get_or_add_tcPr()
-                                                        shd = OxmlElement('w:shd')
-                                                        shd.set(qn('w:val'), 'clear')
-                                                        shd.set(qn('w:color'), 'auto')
-                                                        
-                                                        if r_idx == 0:
-                                                            shd.set(qn('w:fill'), '343176')
-                                                            run.bold = True
-                                                            from docx.shared import RGBColor
-                                                            run.font.color.rgb = RGBColor(255, 255, 255)
-                                                        else:
-                                                            shd.set(qn('w:fill'), 'F4F6F9')
+                                                        tblBorders = OxmlElement('w:tblBorders')
+                                                        for border_name in ['top', 'left', 'bottom', 'right', 'insideH', 'insideV']:
+                                                            border = OxmlElement(f'w:{border_name}')
+                                                            border.set(qn('w:val'), 'single')
+                                                            border.set(qn('w:sz'), '4')
+                                                            border.set(qn('w:space'), '0')
+                                                            border.set(qn('w:color'), '343176')
+                                                            tblBorders.append(border)
+                                                        tblPr[0].append(tblBorders)
+
+                                                    for r_idx, row_data in enumerate(t_data):
+                                                        for c_idx, cell_value in enumerate(row_data):
+                                                            cell = new_table.cell(r_idx, c_idx)
+                                                            cell.text = ""
+                                                            p = cell.paragraphs[0]
+                                                            p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+                                                            pPr = p._element.get_or_add_pPr()
+                                                            bidi = OxmlElement('w:bidi')
+                                                            bidi.set(qn('w:val'), '1')
+                                                            pPr.append(bidi)
                                                             
-                                                        tcPr.append(shd)
-                                                tbl_xml = new_table._element
-                                                tbl_xml.getparent().remove(tbl_xml)
-                                                current_p._element.addnext(tbl_xml)
+                                                            run = p.add_run(str(cell_value))
+                                                            
+                                                            rPr = run._element.get_or_add_rPr()
+                                                            rtl = OxmlElement('w:rtl')
+                                                            rtl.set(qn('w:val'), '1')
+                                                            rPr.append(rtl)
+                                                            
+                                                            tcPr = cell._element.get_or_add_tcPr()
+                                                            shd = OxmlElement('w:shd')
+                                                            shd.set(qn('w:val'), 'clear')
+                                                            shd.set(qn('w:color'), 'auto')
+                                                            
+                                                            if r_idx == 0:
+                                                                shd.set(qn('w:fill'), '343176')
+                                                                run.bold = True
+                                                                from docx.shared import RGBColor
+                                                                run.font.color.rgb = RGBColor(255, 255, 255)
+                                                            else:
+                                                                shd.set(qn('w:fill'), 'F4F6F9')
+                                                                
+                                                            tcPr.append(shd)
+                                                    tbl_xml = new_table._element
+                                                    tbl_xml.getparent().remove(tbl_xml)
+                                                    
+                                                    dummy_before_xml = OxmlElement('w:p')
+                                                    current_p._element.addnext(dummy_before_xml)
+                                                    dummy_before_xml.addnext(tbl_xml)
+                                                    
+                                                    dummy_p_xml = OxmlElement('w:p')
+                                                    tbl_xml.addnext(dummy_p_xml)
+                                                    current_p = Paragraph(dummy_p_xml, current_p._parent)
+                                                    
+                                                    # Re-apply RTL and spacing to the new paragraph
+                                                    current_p.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
+                                                    fmt = current_p.paragraph_format
+                                                    fmt.space_before = Pt(0)
+                                                    fmt.space_after = Pt(0)
+                                                    fmt.line_spacing = 1.0
+                                                    pPr = current_p._element.get_or_add_pPr()
+                                                    bidi = OxmlElement('w:bidi')
+                                                    bidi.set(qn('w:val'), '1')
+                                                    pPr.append(bidi)
+                                        except Exception as e:
+                                            print("Table error:", e)
+                                    continue
+                                    
+                                img_match = re.fullmatch(r"\{\{IMAGE_(\d+)\}\}", part)
+                                if img_match:
+                                    if image_paths:
+                                        try:
+                                            idx = int(img_match.group(1)) - 1
+                                            if 0 <= idx < len(image_paths):
+                                                img_path = image_paths[idx]
+                                                from docx.shared import Inches
+                                                img_p_xml = OxmlElement('w:p')
+                                                current_p._element.addnext(img_p_xml)
+                                                img_p = Paragraph(img_p_xml, current_p._parent)
+                                                img_p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+                                                run = img_p.add_run()
+                                                run.add_picture(img_path, width=Inches(3.0))
                                                 
                                                 dummy_p_xml = OxmlElement('w:p')
-                                                tbl_xml.addnext(dummy_p_xml)
+                                                img_p_xml.addnext(dummy_p_xml)
                                                 current_p = Paragraph(dummy_p_xml, current_p._parent)
-                                    except Exception as e:
-                                        print("Table error:", e)
-                                continue
-                                
-                            img_match = re.fullmatch(r"\{\{IMAGE_(\d+)\}\}", part)
-                            if img_match:
-                                if image_paths:
-                                    try:
-                                        idx = int(img_match.group(1)) - 1
-                                        if 0 <= idx < len(image_paths):
-                                            img_path = image_paths[idx]
-                                            from docx.shared import Inches
-                                            img_p_xml = OxmlElement('w:p')
-                                            current_p._element.addnext(img_p_xml)
-                                            img_p = Paragraph(img_p_xml, current_p._parent)
-                                            img_p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
-                                            run = img_p.add_run()
-                                            run.add_picture(img_path, width=Inches(5.5))
-                                            
-                                            dummy_p_xml = OxmlElement('w:p')
-                                            img_p_xml.addnext(dummy_p_xml)
-                                            current_p = Paragraph(dummy_p_xml, current_p._parent)
-                                    except Exception as e:
-                                        print("Image error:", e)
-                                continue
-                                
-                            # Normal text part
-                            run = current_p.add_run(part)
-                            if paragraph.runs and paragraph.runs[0]._element.rPr is not None:
-                                run._element.append(copy.deepcopy(paragraph.runs[0]._element.rPr))
-                            
-                            current_p.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
-                            fmt = current_p.paragraph_format
-                            fmt.space_before = Pt(0)
-                            fmt.space_after = Pt(0)
-                            fmt.line_spacing = 1.0
-
-                            pPr = current_p._element.get_or_add_pPr()
-                            bidi = OxmlElement('w:bidi')
-                            bidi.set(qn('w:val'), '1')
-                            pPr.append(bidi)
-                        # End of parts loop
+                                                
+                                                # Re-apply RTL and spacing to the new paragraph
+                                                current_p.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
+                                                fmt = current_p.paragraph_format
+                                                fmt.space_before = Pt(0)
+                                                fmt.space_after = Pt(0)
+                                                fmt.line_spacing = 1.0
+                                                pPr = current_p._element.get_or_add_pPr()
+                                                bidi = OxmlElement('w:bidi')
+                                                bidi.set(qn('w:val'), '1')
+                                                pPr.append(bidi)
+                                        except Exception as e:
+                                            print("Image error:", e)
+                                    continue
+                                    
+                                run = current_p.add_run(part)
+                                if base_rPr is not None:
+                                    run._element.append(copy.deepcopy(base_rPr))
+                                    
+                                rPr = run._element.get_or_add_rPr()
+                                rtl = OxmlElement('w:rtl')
+                                rtl.set(qn('w:val'), '1')
+                                rPr.append(rtl)
+                                    
+                                if run_info['bold']:
+                                    run.bold = True
+                                if run_info['italic']:
+                                    run.italic = True
+                                if run_info['underline']:
+                                    run.underline = True
                     
                 else:
                     # Normal replacement without paragraph splitting
