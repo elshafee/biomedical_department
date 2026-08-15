@@ -17,13 +17,13 @@
 
   <style>
     :root {
-      --brand-dark: #111116;
-      --brand-navy: #232152;
-      --brand-blue: #343176;
-      --brand-accent: #C59927;
-      --brand-light: #f8f6e8;
-      --brand-muted: #8b89a6;
-      --brand-border: #d5d3e0;
+      --brand-dark: #0A122A;
+      --brand-navy: #15255B;
+      --brand-blue: #2E79B5;
+      --brand-accent: #C9932B;
+      --brand-light: #F4F6F9;
+      --brand-muted: #828A9E;
+      --brand-border: #D1D5E0;
       --radius-lg: 12px;
       --radius-md: 8px;
       --shadow-card: 0 2px 12px rgba(15, 39, 68, .10), 0 1px 3px rgba(15, 39, 68, .06);
@@ -41,13 +41,28 @@
       background: #f0f4fa;
       color: var(--brand-dark);
       min-height: 100vh;
+      position: relative;
+      z-index: 0;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.15;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23C9932B' stroke-width='1.5'%3E%3Cpolyline points='20,80 60,80 70,50 90,130 110,20 120,80 180,80'/%3E%3Ccircle cx='20' cy='80' r='3' fill='%23C9932B'/%3E%3Ccircle cx='180' cy='80' r='3' fill='%23C9932B'/%3E%3Cpolygon points='300,60 320,72 320,95 300,107 280,95 280,72'/%3E%3Cpolygon points='320,95 340,107 340,130 320,142 300,130 300,107'/%3E%3Cline x1='300' y1='107' x2='300' y2='130'/%3E%3Cline x1='340' y1='130' x2='360' y2='142'/%3E%3Ccircle cx='360' cy='142' r='3' fill='%23C9932B'/%3E%3Cpath d='M60,250 C100,250 100,330 140,330 C180,330 180,250 220,250'/%3E%3Cpath d='M60,330 C100,330 100,250 140,250 C180,250 180,330 220,330'/%3E%3Cline x1='80' y1='265' x2='80' y2='315'/%3E%3Cline x1='120' y1='265' x2='120' y2='315'/%3E%3Cline x1='160' y1='265' x2='160' y2='315'/%3E%3Cline x1='200' y1='265' x2='200' y2='315'/%3E%3Cpath d='M300,280 h10 v-10 h10 v10 h10 v10 h-10 v10 h-10 v-10 h-10 z'/%3E%3Ccircle cx='250' cy='180' r='4' fill='%23C9932B'/%3E%3Cline x1='250' y1='180' x2='280' y2='150'/%3E%3Cline x1='250' y1='180' x2='210' y2='180'/%3E%3Ccircle cx='210' cy='180' r='2' fill='%23C9932B'/%3E%3C/g%3E%3C/svg%3E");
     }
 
     /* ── Sidebar / Nav ── */
     .sidebar {
-      width: 240px;
+      width: 260px;
       min-height: 100vh;
-      background: var(--brand-navy);
+      background: linear-gradient(180deg, var(--brand-navy) 0%, var(--brand-dark) 100%);
       position: fixed;
       top: 0;
       left: 0;
@@ -56,9 +71,23 @@
       z-index: 100;
     }
 
+    .sidebar::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.15;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='400' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23C9932B' stroke-width='1.5'%3E%3Cpolyline points='20,80 60,80 70,50 90,130 110,20 120,80 180,80'/%3E%3Ccircle cx='20' cy='80' r='3' fill='%23C9932B'/%3E%3Ccircle cx='180' cy='80' r='3' fill='%23C9932B'/%3E%3Cpolygon points='300,60 320,72 320,95 300,107 280,95 280,72'/%3E%3Cpolygon points='320,95 340,107 340,130 320,142 300,130 300,107'/%3E%3Cline x1='300' y1='107' x2='300' y2='130'/%3E%3Cline x1='340' y1='130' x2='360' y2='142'/%3E%3Ccircle cx='360' cy='142' r='3' fill='%23C9932B'/%3E%3Cpath d='M60,250 C100,250 100,330 140,330 C180,330 180,250 220,250'/%3E%3Cpath d='M60,330 C100,330 100,250 140,250 C180,250 180,330 220,330'/%3E%3Cline x1='80' y1='265' x2='80' y2='315'/%3E%3Cline x1='120' y1='265' x2='120' y2='315'/%3E%3Cline x1='160' y1='265' x2='160' y2='315'/%3E%3Cline x1='200' y1='265' x2='200' y2='315'/%3E%3Cpath d='M300,280 h10 v-10 h10 v10 h10 v10 h-10 v10 h-10 v-10 h-10 z'/%3E%3Ccircle cx='250' cy='180' r='4' fill='%23C9932B'/%3E%3Cline x1='250' y1='180' x2='280' y2='150'/%3E%3Cline x1='250' y1='180' x2='210' y2='180'/%3E%3Ccircle cx='210' cy='180' r='2' fill='%23C9932B'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
     .sidebar-brand {
-      padding: 28px 24px 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      padding: 32px 24px 24px;
+      border-bottom: 1px solid rgba(201, 147, 43, 0.2);
+      text-align: center;
     }
 
     .sidebar-brand .badge-office {
@@ -75,22 +104,28 @@
     }
 
     .sidebar-brand h1 {
-      color: #fff;
+      font-family: 'DM Mono', monospace;
       font-size: 18px;
       font-weight: 700;
-      margin: 0;
+      color: #fff;
+      margin: 12px 0 4px;
       line-height: 1.3;
+      letter-spacing: 0.5px;
     }
 
     .sidebar-brand p {
-      color: rgba(255, 255, 255, .45);
       font-size: 12px;
-      margin: 4px 0 0;
+      color: var(--brand-accent);
+      margin: 0;
+      opacity: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .sidebar-nav {
-      padding: 16px 12px;
       flex: 1;
+      padding: 24px 16px;
+      overflow-y: auto;
     }
 
     .sidebar-nav .nav-label {
@@ -106,67 +141,141 @@
     .sidebar-nav a {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
+      gap: 12px;
+      padding: 12px 16px;
       border-radius: var(--radius-md);
       color: rgba(255, 255, 255, .65);
       text-decoration: none;
-      font-size: 14px;
+      font-size: 14.5px;
       font-weight: 500;
-      transition: all .18s;
-      margin-bottom: 2px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      margin-bottom: 6px;
+      border-left: 3px solid transparent;
     }
 
-    .sidebar-nav a:hover,
-    .sidebar-nav a.active {
-      background: rgba(255, 255, 255, .09);
+    .sidebar-nav a:hover {
+      background: rgba(255, 255, 255, .05);
       color: #fff;
+      transform: translateX(4px);
     }
 
     .sidebar-nav a.active {
-      background: var(--brand-blue);
-      color: #fff;
+      background: linear-gradient(90deg, rgba(201, 147, 43, 0.15), transparent);
+      color: var(--brand-accent);
+      border-left: 3px solid var(--brand-accent);
+      box-shadow: inset 2px 0 0 rgba(201, 147, 43, 0.5);
     }
 
     .sidebar-nav a i {
-      font-size: 16px;
+      font-size: 18px;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-nav a:hover i {
+      transform: scale(1.1);
+      color: var(--brand-accent);
     }
 
     .sidebar-footer {
-      padding: 16px 20px;
-      border-top: 1px solid rgba(255, 255, 255, .08);
-      color: rgba(255, 255, 255, .3);
-      font-size: 11px;
+      padding: 20px;
+      border-top: 1px solid rgba(255, 255, 255, .05);
+      color: rgba(255, 255, 255, .4);
+      font-size: 12px;
+      text-align: center;
     }
 
     /* ── Main content ── */
     .main-wrap {
-      margin-left: 240px;
+      margin-left: 260px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
+
+
     .topbar {
-      background: #fff;
-      border-bottom: 1px solid var(--brand-border);
-      padding: 16px 32px;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.65) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 3px solid var(--brand-accent);
+      padding: 16px 40px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      box-shadow: 0 4px 24px rgba(21, 37, 91, 0.06);
+      overflow: hidden;
+    }
+
+    .topbar-watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 120%;
+      opacity: 0.08;
+      pointer-events: none;
+      z-index: 0;
     }
 
     .topbar-title {
-      font-size: 20px;
-      font-weight: 700;
+      font-size: 24px;
+      font-weight: 800;
       color: var(--brand-navy);
       margin: 0;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      position: relative;
+    }
+
+    .topbar-ecg {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0.8;
+      padding: 0 20px;
+    }
+
+    .ecg-line {
+      stroke-dasharray: 300;
+      stroke-dashoffset: 300;
+      animation: drawECG 2.2s linear infinite;
+      filter: drop-shadow(0 0 4px rgba(201, 147, 43, 0.4));
+    }
+
+    @keyframes drawECG {
+      0% {
+        stroke-dashoffset: 300;
+        opacity: 0;
+      }
+
+      5% {
+        stroke-dashoffset: 300;
+        opacity: 1;
+      }
+
+      75% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+      }
+
+      85% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+      }
+
+      100% {
+        stroke-dashoffset: 300;
+        opacity: 0;
+      }
     }
 
     .topbar-subtitle {
-      font-size: 13px;
-      color: var(--brand-muted);
-      margin: 2px 0 0;
+      display: none;
     }
 
     .content-area {
@@ -682,10 +791,252 @@
         padding: 20px 16px;
       }
     }
+
+    /* ── Splash Screen ── */
+    #splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: var(--brand-dark);
+      /* Premium dark background */
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      animation: splashOut 0.8s cubic-bezier(0.8, 0, 0.2, 1) forwards;
+      animation-delay: 2.2s;
+      /* Delay before splash disappears */
+    }
+
+    @keyframes splashOut {
+      0% { opacity: 1; transform: scale(1); visibility: visible; pointer-events: auto; }
+      100% { opacity: 0; transform: scale(1.05); visibility: hidden; pointer-events: none; display: none; }
+    }
+
+    .splash-logo-wrapper {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .splash-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 3px solid transparent;
+      border-top-color: var(--brand-accent);
+      border-right-color: var(--brand-accent);
+      border-radius: 50%;
+      animation: splashSpin 1.5s cubic-bezier(0.68, -0.55, 0.26, 1.55) infinite;
+    }
+
+    .splash-ring-inner {
+      position: absolute;
+      width: 70%;
+      height: 70%;
+      border: 2px solid transparent;
+      border-bottom-color: #fff;
+      border-left-color: #fff;
+      border-radius: 50%;
+      animation: splashSpinReverse 2s cubic-bezier(0.68, -0.55, 0.26, 1.55) infinite;
+    }
+
+    @keyframes splashSpin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes splashSpinReverse {
+      0% {
+        transform: rotate(360deg);
+      }
+
+      100% {
+        transform: rotate(0deg);
+      }
+    }
+
+    .splash-icon {
+      font-size: 36px;
+      color: var(--brand-accent);
+      animation: splashPulse 2s infinite;
+    }
+
+    @keyframes splashPulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+
+      50% {
+        transform: scale(1.1);
+        opacity: 1;
+      }
+    }
+
+    .splash-brand {
+      color: #fff;
+      font-family: 'DM Mono', monospace;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+      opacity: 0;
+      text-align: center;
+      line-height: 1.4;
+      animation: splashFadeUp 0.8s forwards;
+      animation-delay: 0.3s;
+    }
+
+    .splash-credit {
+      color: var(--brand-accent);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      font-weight: 600;
+      opacity: 0;
+      clip-path: inset(0 100% 0 0);
+      animation:
+        splashShow 0.1s forwards 0.6s,
+        typingSplash 1s steps(18, end) forwards 0.6s;
+    }
+
+    @keyframes splashShow {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes typingSplash {
+      from {
+        clip-path: inset(0 100% 0 0);
+      }
+
+      to {
+        clip-path: inset(0 0 0 0);
+      }
+    }
+
+    @keyframes splashFadeUp {
+      0% {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── Page Transition Animations ── */
+    @keyframes pageFadeInUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pageFadeOutDown {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(20px); }
+    }
+
+    .page-exit .content-area {
+      animation: pageFadeOutDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    }
+
+    .content-area > *,
+    .content-area .tab-pane.active > *,
+    .content-area .row > * {
+      opacity: 0; /* start hidden */
+      animation: pageFadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    /* Staggered delays for sequential loading */
+    .content-area > *:nth-child(1), .content-area .tab-pane.active > *:nth-child(1), .content-area .row > *:nth-child(1) { animation-delay: 0.05s; }
+    .content-area > *:nth-child(2), .content-area .tab-pane.active > *:nth-child(2), .content-area .row > *:nth-child(2) { animation-delay: 0.12s; }
+    .content-area > *:nth-child(3), .content-area .tab-pane.active > *:nth-child(3), .content-area .row > *:nth-child(3) { animation-delay: 0.19s; }
+    .content-area > *:nth-child(4), .content-area .tab-pane.active > *:nth-child(4), .content-area .row > *:nth-child(4) { animation-delay: 0.26s; }
+    .content-area > *:nth-child(5), .content-area .tab-pane.active > *:nth-child(5), .content-area .row > *:nth-child(5) { animation-delay: 0.33s; }
+    .content-area > *:nth-child(6), .content-area .tab-pane.active > *:nth-child(6), .content-area .row > *:nth-child(6) { animation-delay: 0.40s; }
+    .content-area > *:nth-child(7), .content-area .tab-pane.active > *:nth-child(7), .content-area .row > *:nth-child(7) { animation-delay: 0.47s; }
+    .content-area > *:nth-child(8), .content-area .tab-pane.active > *:nth-child(8), .content-area .row > *:nth-child(8) { animation-delay: 0.54s; }
+    .content-area > *:nth-child(n+9), .content-area .tab-pane.active > *:nth-child(n+9), .content-area .row > *:nth-child(n+9) { animation-delay: 0.61s; }
+
   </style>
 </head>
 
 <body>
+
+  <!-- Splash Screen -->
+  <div id="splash-screen">
+    <div class="splash-logo-wrapper">
+      <div class="splash-ring"></div>
+      <div class="splash-ring-inner"></div>
+      <i class="bi bi-heart-pulse splash-icon"></i>
+    </div>
+    <div class="splash-brand">BME Department</div>
+    <div class="splash-credit">Developed by ESSIC</div>
+  </div>
+  <script>
+    (function() {
+      var splash = document.getElementById('splash-screen');
+      if (splash) {
+        // If the splash screen has already been played in this browser tab, hide it instantly
+        if (sessionStorage.getItem('bmeSplashPlayed')) {
+          splash.style.display = 'none';
+          splash.remove();
+        } else {
+          // First time visiting: record it and let the animation play
+          sessionStorage.setItem('bmeSplashPlayed', 'true');
+          setTimeout(function() {
+            if (document.getElementById('splash-screen')) {
+              document.getElementById('splash-screen').remove();
+            }
+          }, 3200);
+        }
+      }
+    })();
+  </script>
+
+  <!-- Page Transition Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const navLinks = document.querySelectorAll('a.nav-item');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          // Ignore if it opens in a new tab or is the current page
+          if (this.target === '_blank' || this.href.includes('#') || this.href === window.location.href) {
+            return;
+          }
+          
+          e.preventDefault();
+          const targetUrl = this.href;
+          
+          // Trigger the exit animation
+          document.body.classList.add('page-exit');
+          
+          // Navigate after the animation finishes
+          setTimeout(() => {
+            window.location.href = targetUrl;
+          }, 250); 
+        });
+      });
+    });
+  </script>
 
   <!-- AI Loading Overlay -->
   <div id="ai-overlay">
@@ -703,56 +1054,63 @@
     <nav class="sidebar-nav">
       <div class="nav-label">Menu</div>
       <a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint == 'index' else '' }}">
-        <i class="bi bi-cloud-upload"></i> New Document
+        <i class="bi bi-file-earmark-medical"></i> New Document
       </a>
       <a href="{{ url_for('ai_step1') }}"
         class="{{ 'active' if request.endpoint and request.endpoint.startswith('ai_') else '' }}">
-        <i class="bi bi-robot"></i> AI Content Generator
+        <i class="bi bi-cpu"></i> AI Content Generator
       </a>
       <a href="{{ url_for('documents') }}" class="{{ 'active' if request.endpoint == 'documents' else '' }}">
-        <i class="bi bi-table"></i> BME Document Manager
+        <i class="bi bi-clipboard2-pulse"></i> BME Document Manager
       </a>
 
       <div class="nav-label" style="margin-top:20px;">Settings</div>
       <a href="{{ url_for('contacts') }}" class="{{ 'active' if request.endpoint == 'contacts' else '' }}">
-        <i class="bi bi-person-lines-fill"></i> Contacts
+        <i class="bi bi-hospital"></i> Contacts
       </a>
       <a href="{{ url_for('settings_page') }}" class="{{ 'active' if request.endpoint == 'settings_page' else '' }}">
-        <i class="bi bi-gear"></i> AI Provider Settings
+        <i class="bi bi-gear-wide-connected"></i> AI Provider Settings
       </a>
       {% if is_admin %}
       <a href="{{ url_for('users') }}" class="{{ 'active' if request.endpoint == 'users' else '' }}">
-        <i class="bi bi-people"></i> User Management
+        <i class="bi bi-shield-plus"></i> User Management
       </a>
       {% endif %}
     </nav>
-    <div class="sidebar-footer">
-      Version 1.0 &nbsp;·&nbsp; Biomedical Dept &copy; A.Elshafee
+    <div class="sidebar-footer" style="line-height: 1.5; text-align: center;">
+      Version 1.0.0+2<br>
+      Biomedical Department &copy; ESSIC 2026
     </div>
   </aside>
 
   <!-- Main -->
   <div class="main-wrap">
     <div class="topbar">
-      <div>
+      <img src="{{ url_for('static', filename='assets/logo.png') }}" class="topbar-watermark" alt="Logo">
+      <div style="flex: 1; z-index: 1;">
         <p class="topbar-title">{% block page_title %}Document Numbering{% endblock %}</p>
-        <p class="topbar-subtitle">{% block page_subtitle %}Faculty of Engineering — Biomedical Dept Coding System{%
-          endblock %}</p>
       </div>
-      <div style="display: flex; align-items: center; gap: 16px;">
+
+      <div class="topbar-ecg d-none d-md-flex">
+        <svg width="240" height="40" viewBox="0 0 240 40" xmlns="http://www.w3.org/2000/svg">
+          <!-- Real ECG P-QRS-T wave shape -->
+          <path class="ecg-line"
+            d="M0,20 L50,20 Q55,10 60,20 L75,20 L80,26 L90,2 L100,34 L105,20 L125,20 Q135,5 145,20 L240,20" fill="none"
+            stroke="#C9932B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 16px; flex: 1; justify-content: flex-end;">
         {% if session.get('user') %}
         <div style="text-align: right; line-height: 1.2;">
           <div style="font-size: 13px; font-weight: 600; color: var(--brand-navy);">{{ session.user.name }}</div>
           <div style="font-size: 11px; color: var(--brand-muted);">{{ session.user.email }}</div>
         </div>
         <a href="{{ url_for('logout') }}" class="btn-primary-custom"
-          style="font-size:13px;padding:8px 18px; background: #c0392b;">
-          <i class="bi bi-box-arrow-right"></i> Logout
+          style="font-size:13px; font-weight:600; padding:8px 20px; border-radius: 20px; background: rgba(192, 57, 43, 0.1); color: #c0392b; border: 1px solid rgba(192, 57, 43, 0.2); box-shadow: none; transition: all 0.2s;">
+          <i class="bi bi-box-arrow-right me-1"></i> Logout
         </a>
         {% endif %}
-        <a href="{{ url_for('documents') }}" class="btn-primary-custom" style="font-size:13px;padding:8px 18px;">
-          <i class="bi bi-table"></i> View History
-        </a>
       </div>
     </div>
 

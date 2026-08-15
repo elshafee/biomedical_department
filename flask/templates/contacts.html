@@ -1,19 +1,17 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div class="topbar">
-  <div>
-    <h2 class="topbar-title">Contacts Management</h2>
-    <p class="topbar-subtitle">Manage sender and recipient data for auto-completion</p>
-  </div>
-  {% if is_admin %}
-  <button class="btn-primary-custom" data-bs-toggle="modal" data-bs-target="#addContactModal">
-    <i class="bi bi-plus-lg"></i> Add Contact
-  </button>
-  {% endif %}
-</div>
+{% block page_title %}Contacts Management{% endblock %}
 
+{% block content %}
 <div style="padding: 24px 32px;">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 style="color: var(--brand-navy); margin: 0; font-weight: 700;">Directory</h4>
+    {% if is_admin %}
+    <button class="btn-primary-custom" data-bs-toggle="modal" data-bs-target="#addContactModal">
+      <i class="bi bi-plus-lg"></i> Add Contact
+    </button>
+    {% endif %}
+  </div>
   <!-- Flash Messages -->
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
