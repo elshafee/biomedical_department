@@ -19,7 +19,9 @@
     body {
       font-family: 'DM Sans', sans-serif;
       min-height: 100vh;
-      background: linear-gradient(135deg, #0f2744 0%, #1a5fa8 60%, #2e8de4 100%);
+      background: linear-gradient(135deg, rgba(15, 39, 68, 0.7) 0%, rgba(26, 95, 168, 0.6) 100%),
+                  url('{{ url_for("static", filename="assets/login_bg.png") }}') no-repeat center center fixed;
+      background-size: cover;
       display: flex; align-items: center; justify-content: center; padding: 24px;
     }
     .login-card {
@@ -110,7 +112,7 @@
       </form>
     </div>
 
-    <div class="login-footer">Biomedical Dept Document Numbering System &copy; A.Elshafee</div>
+    <div class="login-footer">Biomedical Dept Document Numbering System &copy; ESSIC</div>
   </div>
 </div>
 </body>

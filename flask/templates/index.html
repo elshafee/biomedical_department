@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Upload Document for fun— BME{% endblock %}
+{% block title %}BME Documenting System{% endblock %}
 {% block page_title %}Official Documents Generator{% endblock %}
 {% block page_subtitle %}Upload a .docx template to generate an official code number{% endblock %}
 
@@ -361,7 +361,7 @@
             <!-- Live Preview Side -->
             <div class="col-lg-6 mb-4">
                 <div class="a4-preview-container">
-                    <div class="a4-paper" id="a4Preview">
+                    <div class="a4-paper" id="a4Preview" style="background-image: url('{{ url_for('static', filename='assets/image4.png') }}'); background-size: cover; background-position: center; background-repeat: no-repeat; background-color: white;">
                         <div class="a4-header">
                             <img src="{{ url_for('static', filename='assets/image1.png') }}" class="header-logo-left">
                             <img src="{{ url_for('static', filename='assets/image3.png') }}" class="header-logo-right">
@@ -379,10 +379,6 @@
                         </div>
                         <div class="a4-body" id="previewBody" style="direction: rtl; text-align: right;">
                             <!-- Content will be injected here -->
-                        </div>
-                        <div class="a4-footer">
-                            <img src="{{ url_for('static', filename='assets/image4.png') }}"
-                                style="width: 100%; height: 30px; object-fit: contain;">
                         </div>
                     </div>
                 </div>
