@@ -5,7 +5,7 @@ def run_test():
     doc = Document("template_essic.docx")
     
     replacements = {
-        "{{CODE_NUMBER}}": "0001 BME 08-2026",
+        "{{CODE_NUMBER}}": "0001 AIE 08-2026",
         "{{SEND_TO}}": " ",
         "{{SUBJECT}}": " ",
         "{{STACK_HOLDER}}": "\u202Bا.د حاتم خاطر\u202C",
@@ -14,7 +14,7 @@ def run_test():
         "{{SENDER}}": "",
         "{{SENDER_TOP}}": "\u202Aأ.م.د/ محمد كمال عبد السلام\u202C",
         "{{SENDER_POSITION}}": " ",
-        "{{BME}}": ""
+        "{{AIE}}": ""
     }
 
     for paragraph in doc.paragraphs:

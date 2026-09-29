@@ -4,13 +4,13 @@ services/numbering.py
 Handles auto-incrementing document number generation.
 Numbers reset every month/year combination.
 
-Format: 0031 BME 05-2026
+Format: 0031 AIE 05-2026
 """
 
 import re
 from models import db, Document
 
-OFFICE_CODE = "BME"
+OFFICE_CODE = "AIE"
 
 def get_next_serial(month: int, year: int) -> int:
     """
@@ -30,6 +30,6 @@ def get_next_serial(month: int, year: int) -> int:
 def build_full_code(serial: int, month: int, year: int) -> str:
     """
     Builds the formatted document code string.
-    Example: 0031 BME 05-2026
+    Example: 0031 AIE 05-2026
     """
     return f"{serial:04d} {OFFICE_CODE} {month:02d}-{year}"

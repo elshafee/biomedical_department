@@ -190,7 +190,7 @@ def setup():
             flash("Invalid code. Please try again.", "danger")
 
     # Generate QR code URL
-    totp_uri = pyotp.totp.TOTP(user.totp_secret).provisioning_uri(name=email, issuer_name="BME Document System")
+    totp_uri = pyotp.totp.TOTP(user.totp_secret).provisioning_uri(name=email, issuer_name="AIE Document System")
 
     # Generate QR code image as base64
     qr = qrcode.QRCode(version=1, box_size=10, border=4)
@@ -325,7 +325,7 @@ def index():
 
                 default_sender = 'رئيس قسم الهندسة الطبية الحيوية - كلية الهندسة'
                 
-                # Unconditionally remove BME/old-ESSIC text from all text fields
+                # Unconditionally remove AIE/old-ESSIC text from all text fields
                 recipient = remove_office_code(recipient)
                 subject = remove_office_code(subject)
                 holder_name = remove_office_code(holder_name)
@@ -353,7 +353,7 @@ def index():
                     "{{BODY_TEXT}}": "\u202B" + full_body + "\u202C",
                     "{{SENDER}}": sender_value,
                     "{{SENDER_TOP}}": sender_top,
-                    "{{BME}}": "",
+                    "{{AIE}}": "",
                 }, remove_manager_sig=remove_manager)
                 
             # Attempt PDF generation
@@ -565,7 +565,7 @@ def view_word_online(doc_id):
         
     import urllib.parse
     filename = urllib.parse.quote(doc.generated_filename)
-    url = f"https://horusuni-my.sharepoint.com/personal/aelshafee_horus_edu_eg/_layouts/15/Doc.aspx?sourcedoc=/personal/aelshafee_horus_edu_eg/Documents/BME_Docs/{filename}&action=default"
+    url = f"https://horusuni-my.sharepoint.com/personal/aelshafee_horus_edu_eg/_layouts/15/Doc.aspx?sourcedoc=/personal/aelshafee_horus_edu_eg/Documents/AIE_Docs/{filename}&action=default"
     return redirect(url)
 
 
@@ -620,7 +620,7 @@ def preview_document():
 
             default_sender = 'رئيس قسم الهندسة الطبية الحيوية - كلية الهندسة'
             
-            # Unconditionally remove BME/old-ESSIC text from all text fields
+            # Unconditionally remove AIE/old-ESSIC text from all text fields
             recipient = remove_office_code(recipient)
             subject = remove_office_code(subject)
             holder_name = remove_office_code(holder_name)
@@ -643,7 +643,7 @@ def preview_document():
                 "{{BODY_TEXT}}": "\u202B" + full_body + "\u202C",
                 "{{SENDER}}": sender_value,
                 "{{SENDER_TOP}}": sender_top,
-                "{{BME}}": "",
+                "{{AIE}}": "",
             }, remove_manager_sig=(is_internal and not manager_is_sender))
         else:
             return jsonify({"success": False, "error": "Invalid action type"}), 400
@@ -842,7 +842,7 @@ def edit(doc_id):
 
                 default_sender = 'رئيس قسم الهندسة الطبية الحيوية - كلية الهندسة'
                 
-                # Unconditionally remove BME/old-ESSIC text from all text fields
+                # Unconditionally remove AIE/old-ESSIC text from all text fields
                 doc.recipient = remove_office_code(doc.recipient)
                 doc.subject = remove_office_code(doc.subject)
                 doc.holder_name = remove_office_code(doc.holder_name)
@@ -867,7 +867,7 @@ def edit(doc_id):
                     "{{BODY_TEXT}}": "\u202B" + (body_to_use or "") + "\u202C",
                     "{{SENDER}}": sender_value,
                     "{{SENDER_TOP}}": sender_top,
-                    "{{BME}}": "",
+                    "{{AIE}}": "",
                 }, remove_manager_sig=(doc.is_internal and not doc.manager_is_sender))
             else:
                 from services.word_editor import replace_placeholder
@@ -1082,7 +1082,7 @@ def edit_user(email):
 # ── AI Content Generator Routes ─────────────────────────────────────────────
 #
 # Placeholder contract with the .docx/.pages letterhead template:
-#   {{CODE_NUMBER}}  -> document code, e.g. "0031 BME 05-2026"
+#   {{CODE_NUMBER}}  -> document code, e.g. "0031 AIE 05-2026"
 #   {{SEND_TO}}      -> recipient office/department (normalized Arabic)
 #   {{SUBJECT}}      -> subject line
 #   {{STACK_HOLDER}} -> recipient's formal name/title line, e.g.
@@ -1220,7 +1220,7 @@ def ai_finalize():
 
     default_sender = 'رئيس قسم الهندسة الطبية الحيوية - كلية الهندسة'
     
-    # Unconditionally remove BME/old-ESSIC text from all text fields
+    # Unconditionally remove AIE/old-ESSIC text from all text fields
     recipient = remove_office_code(recipient)
     subject = remove_office_code(subject)
     holder_name = remove_office_code(holder_name)
@@ -1241,7 +1241,7 @@ def ai_finalize():
             "{{BODY_TEXT}}": "\u202B" + full_body + "\u202C",
             "{{SENDER}}": "", # Manager signature kept
             "{{SENDER_TOP}}": sender_top,
-            "{{BME}}": "",
+            "{{AIE}}": "",
         }, table_data=table_data, image_paths=image_paths)
         
         from services.pdf_converter import convert_docx_to_pdf

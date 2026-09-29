@@ -125,7 +125,7 @@ _GLITCH_SCRIPT_RE = re.compile(r'[\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af]')
 _GLUED_LATIN_RE = re.compile(r'(?<=[\u0600-\u06FF])[a-zA-Z]{1,6}(?=[\u0600-\u06FF])')
 # Real abbreviations that legitimately appear embedded in Arabic sentences —
 # never strip these even though they match the glitch-cleanup pattern above.
-_KNOWN_ABBREVIATIONS = {"BME", "HUE", "IT", "HR"}
+_KNOWN_ABBREVIATIONS = {"AIE", "HUE", "IT", "HR"}
 
 
 def _clean_output(text: str) -> str:

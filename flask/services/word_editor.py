@@ -77,7 +77,7 @@ def replace_placeholder(input_path: str, output_path: str, replacement: str):
     Args:
         input_path:   Path to the source .docx template.
         output_path:  Path where the modified document will be saved.
-        replacement:  The code string to substitute (e.g. '0031 BME 05-2026').
+        replacement:  The code string to substitute (e.g. '0031 AIE 05-2026').
     """
     doc = Document(input_path)
 

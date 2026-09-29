@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Edit Document — BME{% endblock %}
+{% block title %}Edit Document — AIE{% endblock %}
 {% block page_title %}Edit Serial Number{% endblock %}
 {% block page_subtitle %}Manually override the serial number and regenerate the document{% endblock %}
 
@@ -89,7 +89,7 @@
           <div class="code-preview-box" style="margin-bottom:24px;">
             <div>
               <div class="label">New code will be</div>
-              <div class="code">Code No <span id="preview-code">{{ "%04d" | format(doc.serial_number) }} BME {{ "%02d" | format(doc.month) }}-{{ doc.year }}</span></div>
+              <div class="code">Code No <span id="preview-code">{{ "%04d" | format(doc.serial_number) }} AIE {{ "%02d" | format(doc.month) }}-{{ doc.year }}</span></div>
             </div>
           </div>
 
@@ -165,7 +165,7 @@
     const padded = String(n).padStart(4, '0');
     const month  = '{{ "%02d" | format(doc.month) }}';
     const year   = '{{ doc.year }}';
-    document.getElementById('preview-code').textContent = `${padded} BME ${month}-${year}`;
+    document.getElementById('preview-code').textContent = `${padded} AIE ${month}-${year}`;
   }
 
   document.getElementById('edit-form').addEventListener('submit', function(e) {

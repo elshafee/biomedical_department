@@ -11,7 +11,7 @@ img.save('dummy.jpg')
 shutil.copy("template_essic.docx", "test_out3.docx")
 
 replacements = {
-    "{{CODE_NUMBER}}": "0003 BME",
+    "{{CODE_NUMBER}}": "0003 AIE",
     "{{SEND_TO}}": " ",
     "{{SUBJECT}}": " ",
     "{{STACK_HOLDER}}": " ",
@@ -19,7 +19,7 @@ replacements = {
     "{{BODY_TEXT}}": "Hello\n{{IMAGE_1}}\nWorld",
     "{{SENDER}}": " ",
     "{{SENDER_TOP}}": " ",
-    "{{BME}}": " "
+    "{{AIE}}": " "
 }
 
 replace_placeholders("template_essic.docx", "test_out3.docx", replacements, image_paths=['dummy.jpg'])

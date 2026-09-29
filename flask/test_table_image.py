@@ -11,7 +11,7 @@ img.save('dummy.jpg')
 shutil.copy("template_essic.docx", "test_out_combined.docx")
 
 replacements = {
-    "{{CODE_NUMBER}}": "0002 BME",
+    "{{CODE_NUMBER}}": "0002 AIE",
     "{{SEND_TO}}": " ",
     "{{SUBJECT}}": " ",
     "{{STACK_HOLDER}}": " ",
@@ -19,7 +19,7 @@ replacements = {
     "{{BODY_TEXT}}": "Hello\n{{TABLE_1}}\nWorld\n{{IMAGE_1}}\nEnd",
     "{{SENDER}}": " ",
     "{{SENDER_TOP}}": " ",
-    "{{BME}}": " "
+    "{{AIE}}": " "
 }
 
 table_data = [["Col 1", "Col 2"], ["Val 1", "Val 2"]]

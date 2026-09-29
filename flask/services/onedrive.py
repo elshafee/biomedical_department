@@ -24,7 +24,7 @@ def get_sharepoint_config(is_preview: bool = False):
     if is_preview:
         folder_path = "/personal/aelshafee_horus_edu_eg/Documents/previews"
     else:
-        folder_path = "/personal/aelshafee_horus_edu_eg/Documents/BME_Docs"
+        folder_path = "/personal/aelshafee_horus_edu_eg/Documents/AIE_Docs"
         
     return share_url, base_url, site_url, folder_path
 

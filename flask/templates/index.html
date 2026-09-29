@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}BME Documenting System{% endblock %}
+{% block title %}AIE Documenting System{% endblock %}
 {% block page_title %}Official Documents Generator{% endblock %}
 {% block page_subtitle %}Upload a .docx template to generate an official code number{% endblock %}
 
@@ -16,7 +16,7 @@
       <div>
         <div class="stat-label">Format</div>
         <div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:600;color:#0f2744;margin-top:4px;">
-          NNNN BME MM-YYYY
+          NNNN AIE MM-YYYY
         </div>
       </div>
     </div>
@@ -638,13 +638,13 @@
             if (internalCheck.checked) {
                 managerGroup.style.display = '';
                 previousSender = senderInput.value;
-                senderInput.value = '- BME Staff';
+                senderInput.value = '- AIE Staff';
             } else {
                 managerGroup.style.display = 'none';
                 managerCheck.checked = false;
                 senderInput.disabled = false;
 
-                if (senderInput.value === '- BME Staff') {
+                if (senderInput.value === '- AIE Staff') {
                     senderInput.value = previousSender;
                 }
             }
@@ -661,7 +661,7 @@
             } else {
                 // Employee is sender → enable sender field for their signature
                 senderInput.disabled = false;
-                senderInput.value = '- BME Staff';
+                senderInput.value = '- AIE Staff';
                 senderInput.placeholder = 'اسم المرسل وتوقيعه';
             }
         });

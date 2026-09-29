@@ -17,7 +17,7 @@ replacements = {
     "{{BODY_TEXT}}": " ",
     "{{SENDER}}": " ",
     "{{SENDER_TOP}}": sender_top,
-    "{{BME}}": " ",
+    "{{AIE}}": " ",
 }
 
 replace_placeholders("template_essic.docx", "test_output.docx", replacements)
